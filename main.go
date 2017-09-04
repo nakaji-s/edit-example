@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 func main() {
@@ -34,6 +35,7 @@ func main() {
 
 	// start server
 	e := echo.New()
+	e.Use(middleware.Logger())
 
 	e.File("/", "index.html")
 	e.Static("/_assets", "_assets")
