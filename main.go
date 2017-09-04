@@ -36,6 +36,7 @@ func main() {
 	e := echo.New()
 
 	e.File("/", "index.html")
+	e.Static("/_assets", "_assets")
 
 	e.GET("/data", func(c echo.Context) error {
 		return c.String(http.StatusOK, string(b))
