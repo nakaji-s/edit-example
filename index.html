@@ -31,11 +31,39 @@
         float: left;
     }
     .CodeMirror-linenumbers { padding: 0 8px; }
+
+    #overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    #text{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 50px;
+        color: white;
+        transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+    }
 </style>
 
 <article>
     <!--<div class="app" v-cloak>-->
     <!--</div>-->
+
+    <div id="overlay" onclick="savingOff()">
+        <div id="text">Saving...</div>
+    </div>
 
     <script>
         var editor = CodeMirror(document.body.getElementsByTagName("article")[0], {
@@ -52,9 +80,14 @@
             keyMap: "sublime",
             foldGutter: true,
             extraKeys: {"Ctrl-S": function(cm){
+                savingOn();
                 axios.put("/data", editor.getValue()).then((response) => {
                     console.log(response.data)
                 }).catch((error) => { console.log(error); });
+
+                setTimeout(function(){
+                    savingOff();
+                }, 500);
             }},
             gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
         });
@@ -65,5 +98,14 @@
                 editor.setValue(response.data)
             }).catch((error) => { console.log(error); });
         };
+
+        function savingOn() {
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function savingOff() {
+            document.getElementById("overlay").style.display = "none";
+        }
+
     </script>
 </article>
